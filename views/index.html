@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registration Form</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+function showData()
+{
+function addAllColumnHeaders(myList) {
+    var columnSet = [];
+    var headerTr$ = $('<tr/>');
+
+    for (var i = 0; i < myList.length; i++) {
+        var rowHash = myList[i];
+        for (var key in rowHash) {
+            if ($.inArray(key, columnSet) == -1) {
+                columnSet.push(key);
+                headerTr$.append($('<th/>').html(key));
+            }
+        }
+    }
+    $("#jsonTable").append(headerTr$);
+
+    return columnSet;
+}
+
+$.getJSON("http://localhost:3000/view", function (data) {
+    var columns = addAllColumnHeaders(data);
+
+    for (var i = 0; i < data.length; i++) {
+        var row$ = $('<tr/>');
+        for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+            var cellValue = data[i][columns[colIndex]];
+
+            if (cellValue == null) { cellValue = ""; }
+
+            row$.append($('<td/>').html(cellValue));
+        }
+        $("#jsonTable").append(row$);
+    }
+});
+}
+</script>
+</head>
+<body>
+  <h1> This form is used to insert data in the database</h1>
+ <form action="/new" method="POST" style="border:2px solid black;width:300px;">
+   <table border="0px" cellpadding="10">
+     <tr>
+       <td>
+         	<label for="email">Email: </label>
+       </td>
+       <td>
+         <input type="email" name="email" />
+       </td>
+     </tr>
+     <tr>
+       <td>
+         <label for="name">Name: </label>
+       </td>
+       <td>
+         <input type="text" name="name" />
+       </td>
+     </tr>
+     <tr>
+       <td>
+         <label for="age">Age: </label>
+       </td>
+       <td>
+         <input type="number" name="age" />
+       </td>
+     </tr>
+     <tr>
+       <td colspan="2">
+         <input type="submit"/>
+       </td>
+     </tr>
+   </table>
+</form>
+<div style="margin:10px;position:absolute;top:70px;left:400px; width: 500px;">
+<button id="btn" onclick="showData()">Show Data</button><br><br>
+<table border="1" cellpadding="5" id="jsonTable" style="border-collapse: collapse;">
+  </table>
+</div>
+
+<h1> This form is used to delete data in the database</h1>
+<form action="/delete" method="post" style="border:2px solid black;width:300px;">
+  <table cellpadding ="10">
+    <tr>
+      <td>
+        <label for="email">Email</label>
+      </td>
+      <td>
+        <input type="email" name="email"/>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="submit" value="delete">
+      </td>
+    </tr>
+  </table>
+  </form>
+  <h1> This form is used to do selective search data in the database</h1>
+  <form action="/search" method="post" style="border:2px solid black;width:300px;">
+    <table cellpadding ="10">
+      <tr>
+        <td>
+          <label for="search">Search</label>
+        </td>
+        <td>
+          <input type="text" name="search"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <input type="submit" value="Search">
+        </td>
+      </tr>
+    </table>
+    </form>
+
+    <!--<% for(var i=0; i<data.length; i++) {%>
+			   <p><%= 'MovieName : '+data[i].MovieName %></p>
+			   <p><%= 'Genre : '+data[i].Genre %></p>
+			   <p><%= 'Language : '+data[i].Language %></p>
+			   <p><%= 'Duration (in minutes) : '+data[i].Duration %></p>
+			   <button type="button" onclick="window.location.href='/EditMovie/'"+<%= data[i].MovieName %> class="btn btn-warning">Edit Movie Details</button>
+			   <hr/>
+			<% } %>-->
+</body>
+</html>
